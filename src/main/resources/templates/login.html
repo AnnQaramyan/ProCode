@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>Sign in</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/login.css}"/>
+    <simple th:replace="common.html"></simple>
+
+</head>
+<body>
+<div class="container">
+    <h1 class="mb-lg-5 mt-lg-4 text-center">
+        Login to your issue tracker
+    </h1>
+
+    <form class="col-4 m-auto" th:action="@{/login}" method="POST">
+        <div class="form-outline mb-4">
+            <input type="email" name="username" id="form2Example1" class="form-control" required/>
+            <label class="form-label" for="form2Example1">Email address</label>
+            <div class="form-notch">
+                <div class="form-notch-leading" style="width: 9px;"></div>
+                <div class="form-notch-middle" style="width: 47.2px;"></div>
+                <div class="form-notch-trailing"></div>
+            </div>
+        </div>
+
+        <div class="form-outline mb-4">
+            <input type="password" id="form2Example2" name="password" class="form-control" required/>
+            <label class="form-label" for="form2Example2">Password</label>
+            <div class="form-notch">
+                <div class="form-notch-leading" style="width: 9px;"></div>
+                <div class="form-notch-middle" style="width: 47.2px;"></div>
+                <div class="form-notch-trailing"></div>
+            </div>
+        </div>
+
+        <div th:if="${param.error != null}">
+            <div class="text-danger mb-4">Invalid credentials</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+    </form>
+</div>
+</body>
+</html>

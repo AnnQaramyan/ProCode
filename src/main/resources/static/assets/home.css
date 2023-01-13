@@ -1,0 +1,41 @@
+* {
+    margin: 0 auto;
+}
+
+.BUG {
+    border: 1px solid crimson !important;
+    color: crimson !important;
+}
+
+.DONE {
+    border: 1px solid darkolivegreen !important;
+    color: darkolivegreen !important;
+}
+
+.RESOLVED {
+    border: 1px solid lightseagreen !important;;
+    color: lightseagreen !important;
+}
+
+.NEW_TASK {
+    border: 1px solid yellowgreen !important;
+    color: yellowgreen !important;
+}
+
+.REOPEN {
+    border: 1px solid palevioletred !important;
+    color: palevioletred !important;
+}
+
+.IN_PROCESS {
+    border: 1px solid darkolivegreen !important;
+    color: darkolivegreen !important;
+}
+
+
+.datePicker-style {
+    width: 394px;
+    max-width: 233px;
+    margin-top: 6px;
+}
+

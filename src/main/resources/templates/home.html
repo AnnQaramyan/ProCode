@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>Tasks</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/home.css}"/>
+    <simple th:replace="common.html"></simple>
+</head>
+<body>
+
+<div th:insert="nav.html"></div>
+
+
+<div class="container-sm mt-lg-5">
+    <div class="row">
+        <div class="col-4 align-content-end mb-lg-5" th:if="${isManager}">
+            <label class="form-label">Search By User</label>
+            <select type="" onchange="filterTasks()" id="filteredUser" name="filteredUser" class="form-control">
+                <option></option>
+                <option th:each="user : ${users}"
+                        th:text="${user.name + ' ' + user.surname}"
+                        th:value="${user.id}">
+            </select>
+        </div>
+
+        <div class="col-4 align-content-end mb-lg-5">
+            <label class="form-label">Search By Status</label>
+            <select type="" onchange="filterTasks()" id="filteredStatus" name="filteredStatus" class="form-control">
+                <option></option>
+                <option th:each="status : ${T(com.example.procodetask.model.enums.TaskStatus).values()}"
+                        th:value="${status}" th:text="${status}"></option>
+            </select>
+
+        </div>
+        <div class="col-4 align-content-end mb-lg-5">
+                <div class='col-sm-6'>
+                    <div class="form-group">
+                        <label for="dateCreated">Search By Date Creation</label>
+                        <div class='input-group date' id='datetime'>
+                            <input type="date" id="dateCreated" name="dateCreated" class="datePicker-style" onchange="filterTasks()">
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+    <div th:insert="task_table :: task_table(tasks=${tasks}, isManager=${isManager})"
+         id="task_table">
+
+    </div>
+</div>
+
+<script>
+
+    function changeTaskStatus(taskSelect, taskId) {
+        let taskStatus = taskSelect.value;
+        jQuery.ajax({
+            url: '/updateTaskStatus',
+            data: {taskStatus: taskStatus, taskId: taskId},
+            type: 'POST',
+            success: function (result) {
+                document.getElementById('taskLastUpdated_' + taskId).innerHTML = result["lastUpdated"]
+                taskSelect.className = result["taskStatus"] + " form-control"
+            }
+        });
+    }
+
+    function filterTasks() {
+        var userId = ''
+        if (document.getElementById('filteredUser') !== null) {
+            userId = document.getElementById('filteredUser').value;
+        }
+        var dateCreated = ''
+        if (document.getElementById('dateCreated') !== null){
+            dateCreated = document.getElementById('dateCreated').value
+        }
+        var taskStatus = document.getElementById('filteredStatus').value;
+
+        $.ajax({
+            url: '/filter',
+            // data: {userId: userId, taskStatus: taskStatus, dateCreated:dateCreated},
+            type: 'GET',
+            success: function (result) {
+                $('#task_table').html(result);
+            }
+        });
+    }
+
+    function remove_task(taskId) {
+        $.ajax({
+            url: '/deleteTask',
+            data: {taskId: taskId},
+            type: 'DELETE',
+            success: function (result) {
+                $('#task_row_' + taskId).remove();
+            }
+        });
+    }
+
+</script>
+</body>
+

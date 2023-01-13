@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>404 Not Found</title>
+    <simple th:replace="common.html"></simple>
+</head>
+<body>
+
+<div sec:authorize="isAuthenticated()" th:insert="nav.html"></div>
+
+<div class="container-sm text-center mt-lg-5">
+    <h1 class="text-danger">Access Denied</h1>
+</div>
+</body>
