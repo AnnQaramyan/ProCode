@@ -11,7 +11,6 @@
 
 <div th:insert="nav.html"></div>
 
-
 <div class="container-sm mt-lg-5">
     <div class="row">
         <div class="col-4 align-content-end mb-lg-5" th:if="${isManager}">
@@ -33,15 +32,16 @@
             </select>
 
         </div>
-        <div class="col-4 align-content-end mb-lg-5">
-                <div class='col-sm-6'>
-                    <div class="form-group">
-                        <label for="dateCreated">Search By Date Creation</label>
-                        <div class='input-group date' id='datetime'>
-                            <input type="date" id="dateCreated" name="dateCreated" class="datePicker-style" onchange="filterTasks()">
-                        </div>
+        <div class="col-4 align-content-end mb-lg-5" th:if="${!isManager}">
+            <div class='col-sm-6'>
+                <div class="form-group">
+                    <label for="dateCreated">Search By Date Creation</label>
+                    <div class='input-group date' id='datetime'>
+                        <input type="date" id="dateCreated" name="dateCreated" class="datePicker-style"
+                               onchange="filterTasks()">
                     </div>
                 </div>
+            </div>
 
         </div>
     </div>
@@ -72,14 +72,14 @@
             userId = document.getElementById('filteredUser').value;
         }
         var dateCreated = ''
-        if (document.getElementById('dateCreated') !== null){
+        if (document.getElementById('dateCreated') !== null) {
             dateCreated = document.getElementById('dateCreated').value
         }
         var taskStatus = document.getElementById('filteredStatus').value;
 
         $.ajax({
             url: '/filter',
-            // data: {userId: userId, taskStatus: taskStatus, dateCreated:dateCreated},
+            data: {userId: userId, taskStatus: taskStatus, dateCreated: dateCreated},
             type: 'GET',
             success: function (result) {
                 $('#task_table').html(result);

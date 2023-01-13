@@ -1,37 +1,34 @@
-
 <table class="table align-middle mb-0 bg-white" th:fragment="task_table(tasks, isManager)">
-  <thead class="bg-light">
-  <tr>
-    <th>Task Name</th>
-    <th>Task Description</th>
-    <th>Task Creation Date</th>
-    <th>Task Update Date</th>
-    <th>Task Status</th>
-
-    <th th:if="${isManager}"></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="task: ${tasks}" th:id="'task_row_' + ${task.getId()}">
-
-
-    <td th:text="${task.name}"></td>
-    <td th:text="${task.description}"></td>
-    <td th:text="${task.dateCreated}"></td>
-    <td th:text="${task.lastUpdated}" th:id="'taskLastUpdated_' + ${task.getId()}"></td>
-    <td>
-        <select type="" th:onchange="'changeTaskStatus(this,' + ${task.getId()} + ')'" id="taskStatus" name="taskStatus" th:class="${task.getTaskStatus()} + ' form-control'">
-          <option th:each="status : ${T(com.example.procodetask.model.enums.TaskStatus).values()}"
-                  th:value="${status}" th:text="${status}" th:selected="(${task.getTaskStatus()} == *{status})"  th:class="'text-black'"
-                  th:disabled="${!isManager && (status == T(com.example.procodetask.model.enums.TaskStatus).DONE || status == T(com.example.procodetask.model.enums.TaskStatus).REOPEN)}"></option>
-        </select>
-
-    </td>
-    <td th:if="${isManager}">
-      <button class="btn btn-sm btn-danger"  th:onclick="'remove_task(' + ${task.getId()} + ')'">
-        <i class="fa fa-trash" aria-hidden="true"></i>
-      </button>
-    </td>
-  </tr>
-  </tbody>
+    <thead class="bg-light">
+    <tr>
+        <th>Task Name</th>
+        <th>Task Description</th>
+        <th>Task Creation Date</th>
+        <th>Task Update Date</th>
+        <th>Task Status</th>
+        <th th:if="${isManager}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task: ${tasks}" th:id="'task_row_' + ${task.getId()}">
+        <td th:text="${task.name}"></td>
+        <td th:text="${task.description}"></td>
+        <td th:text="${task.dateCreated}"></td>
+        <td th:text="${task.lastUpdated}" th:id="'taskLastUpdated_' + ${task.getId()}"></td>
+        <td>
+            <select type="" th:onchange="'changeTaskStatus(this,' + ${task.getId()} + ')'" id="taskStatus"
+                    name="taskStatus" th:class="${task.getTaskStatus()} + ' form-control'">
+                <option th:each="status : ${T(com.example.procodetask.model.enums.TaskStatus).values()}"
+                        th:value="${status}" th:text="${status}" th:selected="(${task.getTaskStatus()} == *{status})"
+                        th:class="'text-black'"
+                        th:disabled="${!isManager && (status == T(com.example.procodetask.model.enums.TaskStatus).DONE || status == T(com.example.procodetask.model.enums.TaskStatus).REOPEN)}"></option>
+            </select>
+        </td>
+        <td th:if="${isManager}">
+            <button class="btn btn-sm btn-danger" th:onclick="'remove_task(' + ${task.getId()} + ')'">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+        </td>
+    </tr>
+    </tbody>
 </table>

@@ -16,11 +16,10 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -47,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
     public Task save(TaskCommand taskCommand, Long userId) {
         Task task = new Task();
         task.setDateCreated(LocalDate.now());
-        task.setLastUpdated(new Date());
+        task.setLastUpdated(LocalDate.now());
         task.setDescription(taskCommand.getDescription());
         task.setName(taskCommand.getName());
         User manager = userRepository.getById(userId);
@@ -63,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     public Task updateTaskStatus(TaskStatus taskStatus, Long taskId) {
         Task task = taskRepository.getById(taskId);
         task.setTaskStatus(taskStatus);
-        task.setLastUpdated(new Date());
+        task.setLastUpdated(LocalDate.now());
         return taskRepository.save(task);
     }
 
@@ -87,7 +86,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         if (filterCommand.getDateCreated() != null){
-            predicates.add(criteriaBuilder.between(task.get("dateCreated"), filterCommand.getDateCreated(), filterCommand.getDateCreated().plusDays(1)));
+            predicates.add(criteriaBuilder.equal(task.get("dateCreated"), filterCommand.getDateCreated()));
         }
 
         if (!isManager) {
@@ -98,4 +97,26 @@ public class TaskServiceImpl implements TaskService {
         TypedQuery<Task> query = entityManager.createQuery(cq);
         return query.getResultList();
     }
+
+    @Override
+    public ModelAndView getModel(Boolean isManager, User user) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (isManager) {
+            modelAndView.getModel().put("tasks", taskRepository.findAll());
+            modelAndView.getModel().put("users", userRepository.findAll());
+            modelAndView.getModel().put("isManager", isManager);
+        } else {
+            modelAndView.getModel().put("tasks", taskRepository.findAllByUser(user));
+            modelAndView.getModel().put("users", user);
+            modelAndView.getModel().put("isManager", false);
+        }
+        return modelAndView;
+    }
+
+    @Override
+    public Task findByUserId(Long userId) {
+        return taskRepository.findByUserId(userId);
+    }
+
+
 }

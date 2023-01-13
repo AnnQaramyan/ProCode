@@ -5,6 +5,7 @@ import com.example.procodetask.command.TaskCommand;
 import com.example.procodetask.model.Task;
 import com.example.procodetask.model.User;
 import com.example.procodetask.model.enums.TaskStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -20,4 +21,9 @@ public interface TaskService {
     void deleteTask(Long taskId);
 
     List<Task> filter(FilterCommand filterCommand, Boolean isManager, User user);
+
+    ModelAndView getModel(Boolean isManager, User user);
+
+    Task findByUserId(Long userId);
+
 }

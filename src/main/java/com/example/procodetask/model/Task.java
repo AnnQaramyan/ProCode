@@ -1,6 +1,7 @@
 package com.example.procodetask.model;
 
 import com.example.procodetask.model.enums.TaskStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -25,15 +26,17 @@ public class Task {
     private LocalDate dateCreated;
 
     @Column(name = "last_updated")
-    private Date lastUpdated;
+    private LocalDate lastUpdated;
 
     @Column(name = "task_status")
     private TaskStatus taskStatus;
 
     @ManyToOne(cascade = CascadeType.DETACH)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
     @ManyToOne(cascade = CascadeType.DETACH)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User manager;
 
     public String getName() {
@@ -68,11 +71,11 @@ public class Task {
         this.dateCreated = dateCreated;
     }
 
-    public Date getLastUpdated() {
+    public LocalDate getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
+    public void setLastUpdated(LocalDate lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

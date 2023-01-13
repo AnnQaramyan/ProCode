@@ -2,7 +2,6 @@ package com.example.procodetask.controller;
 
 import com.example.procodetask.command.FilterCommand;
 import com.example.procodetask.command.TaskCommand;
-import com.example.procodetask.model.Authority.Authority;
 import com.example.procodetask.model.Authority.AuthorityType;
 import com.example.procodetask.model.Task;
 import com.example.procodetask.model.User;
@@ -14,16 +13,14 @@ import com.example.procodetask.service.TaskService;
 import com.example.procodetask.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,41 +44,28 @@ public class TaskController {
     public ModelAndView add(@ModelAttribute TaskCommand taskCommand, Authentication authentication) throws ChangeSetPersister.NotFoundException {
         Long userId = userService.getIdByAuthentication(authentication);
         taskService.save(taskCommand, userId);
+        ModelMap model =  new ModelMap();
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("home");
         User user = userRepository.getById(userId);
         Boolean isManager = user.getAuthorities().contains(authorityRepository.getByName(AuthorityType.MANAGER));
-        if (isManager) {
-            modelAndView.getModel().put("tasks", taskRepository.findAll());
-            modelAndView.getModel().put("users", userRepository.findAll());
-            modelAndView.getModel().put("isManager", isManager);
-        } else {
-            modelAndView.getModel().put("tasks", taskRepository.findAllByUser(user));
-            modelAndView.getModel().put("users", user);
-            modelAndView.getModel().put("isManager", false);
-        }
-        return modelAndView;
+        modelAndView = taskService.getModel(isManager, user);
+        model.addAttribute(modelAndView);
+        return new ModelAndView("redirect:/home", model);
     }
 
     @GetMapping("/newTask")
     public ModelAndView newTask(Authentication authentication) {
         Long userId = userService.getIdByAuthentication(authentication);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("newTask");
         User user = userRepository.getById(userId);
         Boolean isManager = user.getAuthorities().contains(authorityRepository.getByName(AuthorityType.MANAGER));
-        if (isManager) {
-            modelAndView.getModel().put("users", userRepository.findAll());
-            modelAndView.getModel().put("isManager", isManager);
-        } else {
-            modelAndView.getModel().put("users", user);
-            modelAndView.getModel().put("isManager", false);
-        }
+        modelAndView = taskService.getModel(isManager, user);
+        modelAndView.setViewName("newTask");
         return modelAndView;
     }
 
     @PostMapping("/updateTaskStatus")
-    public ResponseEntity<Task> updateTaskStatus(@RequestAttribute String taskStatus, @RequestAttribute Long taskId, Authentication authentication) {
+    public ResponseEntity<Task> updateTaskStatus(@RequestParam String taskStatus, @RequestParam Long taskId, Authentication authentication) {
         Long userId = userService.getIdByAuthentication(authentication);
         User user = userRepository.getReferenceById(userId);
         Boolean isManager = user.getAuthorities().contains(authorityRepository.getByName(AuthorityType.MANAGER));

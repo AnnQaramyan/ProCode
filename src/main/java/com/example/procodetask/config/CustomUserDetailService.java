@@ -16,11 +16,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
     private final UserService userService;
 
-
     public CustomUserDetailService(UserService userService) {
         this.userService = userService;
     }
-
 
     @Override
     @Transactional

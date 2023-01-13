@@ -3,6 +3,7 @@ package com.example.procodetask.repository;
 import com.example.procodetask.model.Task;
 import com.example.procodetask.model.User;
 import com.example.procodetask.model.enums.TaskStatus;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +17,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByTaskStatusAndUser(TaskStatus status, User user);
 
-
+    Task findByUserId(Long userId);
 }
