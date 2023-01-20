@@ -16,7 +16,7 @@
 
     <form class="col-4 m-auto" th:action="@{/login}" method="POST">
         <div class="form-outline mb-4">
-            <input type="email" name="username" id="form2Example1" class="form-control" required/>
+            <input type="email" name="username" id="form2Example1" class="form-control" required autocomplete="off"/>
             <label class="form-label" for="form2Example1">Email address</label>
             <div class="form-notch">
                 <div class="form-notch-leading" style="width: 9px;"></div>
@@ -36,7 +36,7 @@
         </div>
 
         <div th:if="${param.error != null}">
-            <div class="text-danger mb-4">Invalid credentials</div>
+            <div class="text-danger mb-4">Invalid username and password.</div>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>

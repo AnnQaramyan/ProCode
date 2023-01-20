@@ -1,4 +1,4 @@
-<section class="w-100 p-4">
+<section class="w-100 p-4"  th:fragment="nav(user)">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
@@ -12,6 +12,11 @@
                     <img src="https://cdn-icons-png.flaticon.com/512/906/906334.png" height="32"
                          alt="MDB Logo" loading="lazy">
                 </a>
+
+
+                <div class="d-flex align-items-center" style="margin-right: 1243px" th:text="${user.getName() + ' ' + user.getSurname()}">
+
+                </div>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">

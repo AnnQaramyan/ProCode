@@ -11,6 +11,7 @@ import com.example.procodetask.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,8 +35,17 @@ public class HomeController {
     TaskService taskService;
 
     @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
-    public ModelAndView loginEndpoint() {
+    public ModelAndView loginEndpoint(Authentication authentication) {
         ModelAndView modelAndView = new ModelAndView();
+        if (authentication != null){
+            Long userId = userService.getIdByAuthentication(authentication);
+            ModelMap model =  new ModelMap();
+            User user = userRepository.getReferenceById(userId);
+            Boolean isManager = user.getAuthorities().contains(authorityRepository.getByName(AuthorityType.MANAGER));
+            modelAndView = taskService.getModel(isManager, user);
+            model.addAttribute(modelAndView);
+            return new ModelAndView("redirect:/home", model);
+        }
         modelAndView.setViewName("login");
         return modelAndView;
     }

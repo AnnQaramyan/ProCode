@@ -110,6 +110,7 @@ public class TaskServiceImpl implements TaskService {
             modelAndView.getModel().put("users", user);
             modelAndView.getModel().put("isManager", false);
         }
+        modelAndView.getModel().put("user", user);
         return modelAndView;
     }
 
